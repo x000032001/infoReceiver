@@ -8,7 +8,11 @@ It can run with google test but I'm not using unit test actually.
 Installation
 ------------
 
-compile by yourself
+first get collectl and install it
+
+	http://collectl.sourceforge.net/
+	
+then compile by yourself
 
 	g++ main.cpp infoReceriver.cpp -o receiver -O2 -lpthread
 
