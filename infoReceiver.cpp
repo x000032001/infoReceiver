@@ -27,14 +27,26 @@ int infoReceiver::updateInfo( string str )
 	return 1;
 }
 
+void infoReceiver :: registerItem( deque<string> *que ,int col ,int max )
+{
+	maxSize[col] = max;
+	monitorVec[col] = que;
+}
+
+void infoReceiver :: sync()
+{
+	for( auto it : monitorVec )
+	{
+		int col = it.first;
+		it.second->insert( it.second->begin()+it.second->size() , tempData[col].begin() , tempData[col].end() );
+		while( it.second->size() > maxSize[col] )
+			it.second->pop_front();
+	}
+}
+
 vector<string> infoReceiver::getColumns()
 {
 	return columnName;
-}
-
-vector< vector<string> > infoReceiver::getInfos()
-{
-	return infos;
 }
 
 void infoReceiver::printColumns()
@@ -45,45 +57,6 @@ void infoReceiver::printColumns()
 	cout << endl;
 }
 
-void infoReceiver::printInfos()
-{
-	vector< vector<string> > infos = getInfos();
-	for( size_t i = 0 ; i < infos.size() ; ++i )
-	{
-		for( size_t j = 0 ; j < columnName.size() ; ++j )
-			cout << infos[i][j] << "\t";
-		cout << endl;
-	}
-}
-
-void infoReceiver::printInfoByCol( size_t col )
-{
-	if( col >= columnName.size() )
-		throw runtime_error("select column out of range");
-
-	vector<string> val = getInfoByCol(col);
-	cout << columnName[col] << endl;
-
-	for( size_t i = 0 ; i < val.size() ; ++i )
-		cout << val[i] << '\t';
-	cout << endl;
-}
-
-vector<string> infoReceiver::getInfoByCol( size_t col )
-{
-	if( col >= columnName.size() )
-		throw runtime_error("select column out of range");
-	updateVector(col);
-
-	return monitorVectors[col];
-}
-
-void infoReceiver::updateVector( int col )
-{
-	vector<string>& vec = monitorVectors[col];
-	for( size_t i = vec.size() ; i < infos.size() ; ++i )
-		vec.push_back( infos[i][col] );	
-}
 
 int infoReceiver::tryResolveHeader()
 {
@@ -129,17 +102,17 @@ int infoReceiver::parseOneLine( string line )
 	vector<string> tmp;
 	string s;
 	while( ss >> s )	
-	{
 		tmp.push_back(s);
-	}
 
 	if( tmp.size() != columnName.size() )
-	{
-		//printf("tmp.size=%d, col.size=%d, %s\n",tmp.size(),columnName.size(),line.c_str() );
 		return ERR;
-	}
 	
-	infos.push_back(tmp);
+	for( auto it : monitorVec )
+	{
+		int col = it.first;
+		tempData[col].push_back( tmp[col] );
+	}
+
 	return OK;
 }
 

@@ -76,41 +76,23 @@ void* run(void* p)
 int main()
 {
 	pthread_t t;
+	isRun = true;
+	int rrr = pthread_create(&t,NULL,run,NULL);
+	if(rrr){
+		error("create thread");
+	}
+
+	deque<string> ss;
+	r.registerItem( &ss , 3 , 50 );
 	while(1)
 	{
-		printf( "1. create server\n2. exit\n3. print all columns\n4. print all infos\n5. print selected column\n");
-		int opt;
-		scanf(" %d",&opt);
-		switch(opt)
-		{
-			case 1:{
-				long long int f = 0;
-				isRun = true;
-				int rrr = pthread_create(&t,NULL,run,NULL);
-				if(rrr){
-					error("create thread");
-				}
-				break;}
-			case 2:{
-				isRun = false;
-				pthread_join(t,NULL);
-				return 0;
-				break;}
-			case 3:{
-				r.printColumns();
-				break;}
-			case 4:{
-				r.printInfos();
-				break;}
-			case 5:{
-				size_t col;
-				scanf(" %llu",&col);
-				try {
-				r.printInfoByCol(col);
-				} catch(...) {;}
-				break;}
-		}
+		r.sync();
+		for( auto s : ss )
+			cout << s << endl;
+		cout << "size=" << ss.size() << endl;
+		usleep(10000);
 	}
+
 
 	return 0;
 }

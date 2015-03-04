@@ -21,14 +21,13 @@ class infoReceiver
 public:
 	infoReceiver();
 	int updateInfo(string);
+	void registerItem(deque<string>*,int col,int max);
+	void sync();
+
 	vector<string> getColumns();
-	vector< vector<string> > getInfos();
-	vector<string> getInfoByCol(size_t);
 
 // debug help func
 	void printColumns();
-	void printInfos();
-	void printInfoByCol(size_t);
 
 private:
 	bool hasHeader;
@@ -36,8 +35,11 @@ private:
 	string host;
 	deque<string> lines;
 	vector<string> columnName;
-	vector< vector<string> > infos;
-	map<int, vector<string> > monitorVectors;
+	vector< deque<string> > infos;
+
+	map<int, int> maxSize;
+	map<int, deque<string>* > monitorVec;
+	map<int, deque<string> > tempData;
 
 	void updateVector(int);
 	int tryResolveHeader();
