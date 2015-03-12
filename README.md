@@ -14,7 +14,7 @@ first get collectl and install it
 	
 then compile by yourself
 
-	g++ main.cpp infoReceriver.cpp -o receiver -O2 -lpthread
+	g++ -o main *.cpp -std=c++11 -pthread
 
 
 Usage

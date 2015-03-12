@@ -30,6 +30,7 @@ int infoReceiver::updateInfo( string str )
 void infoReceiver :: registerItem( deque<string> *que ,int col ,int max )
 {
 	maxSize[col] = max;
+	que->resize(max+2);
 	monitorVec[col] = que;
 }
 

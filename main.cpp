@@ -82,13 +82,28 @@ int main()
 		error("create thread");
 	}
 
+	r.printColumns();
+	printf("choose column");
+	int chosen = 3;
+	int maxSize = 1000;
+
+	// create container
 	deque<string> ss;
-	r.registerItem( &ss , 3 , 50 );
+
+	// pass to register 
+	// 50 is max size
+	r.registerItem( &ss , chosen , maxSize );
 	while(1)
 	{
+		/* CRITICAL SECTION */
+		// sync data before using
+		// don't access container when in critical section
 		r.sync();
-		for( auto s : ss )
-			cout << s << endl;
+		/* CRITICAL SECTION */
+
+		//for( auto s : ss )
+		for( size_t i = 0 ; i < ss.size() ; ++i )
+			cout << ss[i] << endl;
 		cout << "size=" << ss.size() << endl;
 		usleep(10000);
 	}
